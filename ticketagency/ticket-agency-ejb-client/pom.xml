@@ -12,7 +12,7 @@
     <artifactId>ticket-agency-ejb-client</artifactId>
 
     <properties>
-        <version.jboss.as>7.1.0.Final</version.jboss.as>
+        <version.jboss.as>7.2.0.Final</version.jboss.as>
         <version.jboss.spec.javaee.6.0>3.0.2.Final</version.jboss.spec.javaee.6.0>
     </properties>
 
@@ -33,14 +33,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-            <!--<dependency>-->
-                <!--<groupId>org.jboss.as</groupId>-->
-                <!--<artifactId>jboss-as-ejb-client-bom</artifactId>-->
-                <!--<version>${version.jboss.as}</version>-->
-                <!--<type>pom</type>-->
-                <!--<scope>import</scope>-->
-            <!--</dependency>-->
+            <dependency>
+                <groupId>org.wildfly</groupId>
+                <artifactId>wildfly-ejb-client-bom</artifactId>
+                <version>8.1.0.Final</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -52,20 +51,20 @@
             <version>${project.version}</version>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>jboss</groupId>-->
-            <!--<artifactId>jboss-common-client</artifactId>-->
-            <!--<version>3.2.3</version>-->
+        <!--<groupId>jboss</groupId>-->
+        <!--<artifactId>jboss-common-client</artifactId>-->
+        <!--<version>3.2.3</version>-->
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>jboss</groupId>-->
-            <!--<artifactId>jboss-client</artifactId>-->
-            <!--<version>3.2.3</version>-->
+        <!--<groupId>jboss</groupId>-->
+        <!--<artifactId>jboss-client</artifactId>-->
+        <!--<version>3.2.3</version>-->
         <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.jboss.logging</groupId>-->
-            <!--<artifactId>jboss-logging</artifactId>-->
-            <!--<scope>compile</scope>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>org.jboss.spec.javax.transaction</groupId>
             <artifactId>jboss-transaction-api_1.2_spec</artifactId>
@@ -135,7 +134,7 @@
                     <workingDirectory>${project.build.directory}/exec-workingdirectory</workingDirectory>
                     <arguments>
                         <argument>-classpath</argument>
-                        <classpath />
+                        <classpath/>
                         <argument>com.drd.client.TicketAgencyClient</argument>
                     </arguments>
                 </configuration>
