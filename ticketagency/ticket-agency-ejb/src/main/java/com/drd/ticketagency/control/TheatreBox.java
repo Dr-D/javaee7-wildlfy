@@ -60,8 +60,8 @@ public class TheatreBox {
         final Seat seat = getSeat(seatId);
         if(seat.isBooked()) {
             throw new SeatBookedException(String.format("Seat '%d' already booked!", seatId));
-
         }
+        addSeat(seat.getBookedSeat());
     }
 
     @Lock(READ)

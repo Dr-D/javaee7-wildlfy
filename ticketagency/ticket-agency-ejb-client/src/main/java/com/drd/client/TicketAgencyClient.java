@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class TicketAgencyClient {
 
     private static final Logger logger = Logger.getLogger(TicketAgencyClient.class.getName());
-
+    private final String usage = "Commands: book, list, money, quit";
 
     public static void main(String[] args) throws Exception {
 
@@ -57,7 +57,8 @@ public class TicketAgencyClient {
 
         showWelcomeMessage();
 
-        while (true) {
+        boolean exit = false;
+        while (!exit) {
             final String stringCommand =  IOUtils.readLine("> ");
             final Command command = Command.parseCommand(stringCommand);
 
@@ -65,20 +66,22 @@ public class TicketAgencyClient {
                 case BOOK: handleBook(); break;
                 case LIST: handleList(); break;
                 case MONEY: handleMoney(); break;
-                case QUIT: handleQuit(); break;
+                case QUIT: exit = true; break;
                 default:
                     logger.warning("Unknown command: '" + stringCommand + "'");
+                    System.out.println(usage);
             }
         }
+        handleQuit();
     }
 
-    void handleBook() {
+    private void handleBook() {
         int seatId;
 
         try {
             seatId = IOUtils.readInt("Enter SeatID: ");
         } catch (NumberFormatException nfe) {
-            logger.warning("Wrong seatId format!");
+            logger.warning(usage);
             return;
         }
 
@@ -101,7 +104,6 @@ public class TicketAgencyClient {
 
     void handleQuit() {
         logger.info("Bye");
-        System.exit(0);
     }
 
     private TheatreBookerRemote lookupTheatreBookerEJB() throws NamingException {
