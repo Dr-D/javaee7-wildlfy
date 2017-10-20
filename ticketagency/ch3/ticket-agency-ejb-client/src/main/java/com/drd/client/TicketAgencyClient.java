@@ -9,7 +9,11 @@ import com.drd.ticketagency.control.SeatBookedException;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,7 +23,9 @@ import java.util.logging.Logger;
 public class TicketAgencyClient {
 
     private static final Logger logger = Logger.getLogger(TicketAgencyClient.class.getName());
-    private final String usage = "Commands: book, list, money, quit";
+    private final String usage = "Commands: book, list, money, quit, bookasync, mail";
+
+    private final List<Future<String>> lastBookings = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
 
@@ -40,7 +46,7 @@ public class TicketAgencyClient {
     }
 
     private enum Command {
-        BOOK, LIST, MONEY, QUIT, INVALID;
+        BOOK, LIST, MONEY, QUIT, INVALID, BOOKASYNC, MAIL;
 
         public static Command parseCommand(String stringCommand) {
             try {
@@ -63,6 +69,8 @@ public class TicketAgencyClient {
             final Command command = Command.parseCommand(stringCommand);
 
             switch (command) {
+                case MAIL: handleMail(); break;
+                case BOOKASYNC: handleBookAsync(); break;
                 case BOOK: handleBook(); break;
                 case LIST: handleList(); break;
                 case MONEY: handleMoney(); break;
@@ -73,6 +81,43 @@ public class TicketAgencyClient {
             }
         }
         handleQuit();
+    }
+
+    private void handleBookAsync() {
+        int seatId;
+
+        try {
+            seatId = IOUtils.readInt("Enter SeatID: ");
+        } catch (NumberFormatException nfe) {
+            logger.warning("Wrong seatID format!\n" + usage);
+            return;
+        }
+
+        lastBookings.add(theatreBooker.bookSeatAsync(seatId));
+        logger.info("Booking issued. Verify you mail!");
+    }
+
+    private void handleMail() {
+        boolean displayed = false;
+        final List<Future<String>> notFinished = new ArrayList<>();
+        for(Future<String> booking : lastBookings) {
+            if (booking.isDone()) {
+                try {
+                    final String result = booking.get();
+                    logger.info("Mail received: " + result);
+                    displayed = true;
+                } catch (InterruptedException | ExecutionException e) {
+                    logger.warning(e.getMessage());
+                }
+            } else {
+                notFinished.add(booking);
+            }
+        }
+
+        lastBookings.retainAll(notFinished);
+        if(!displayed) {
+            logger.info("No mail received!");
+        }
     }
 
     private void handleBook() {
@@ -119,6 +164,6 @@ public class TicketAgencyClient {
     private void showWelcomeMessage() {
         System.out.println("Theatre booking system");
         System.out.println("=====================================");
-        System.out.println("Commands: book, list, money, quit");
+        System.out.println(usage);
     }
 }

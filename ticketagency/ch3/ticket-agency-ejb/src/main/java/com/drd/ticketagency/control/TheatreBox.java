@@ -3,14 +3,13 @@ package com.drd.ticketagency.control;
 import org.jboss.logging.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.AccessTimeout;
-import javax.ejb.Lock;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
+import javax.annotation.Resource;
+import javax.ejb.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import static javax.ejb.LockType.READ;

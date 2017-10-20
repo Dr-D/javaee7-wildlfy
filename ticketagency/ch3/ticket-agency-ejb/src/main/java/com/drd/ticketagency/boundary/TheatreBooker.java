@@ -6,10 +6,8 @@ import com.drd.ticketagency.control.TheatreBox;
 import org.jboss.logging.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.AccessTimeout;
-import javax.ejb.EJB;
-import javax.ejb.Remote;
-import javax.ejb.Stateful;
+import javax.ejb.*;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,5 +47,18 @@ public class TheatreBooker implements TheatreBookerRemote {
 
         logger.infov("Seat '{0}' booked.", seatId);
         return "Seat booked.";
+    }
+
+    @Asynchronous
+    @Override
+    public Future<String> bookSeatAsync(int seatId) {
+        try {
+            Thread.sleep(10000);
+            bookSeat(seatId);
+            return new AsyncResult<>("Booked seat: " + seatId + ". Money left: " + money);
+        } catch (NoSuchSeatException | SeatBookedException |
+                NotEnoughMoneyException | InterruptedException e) {
+            return new AsyncResult<>(e.getMessage());
+        }
     }
 }
