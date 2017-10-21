@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.drd</groupId>
+    <artifactId>ticket-agency</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>ticket-agency-ejb</module>
+        <module>ticket-agency-ejb-client</module>
+    </modules>
+
+    <properties>
+        <javaee.version>7.0</javaee.version>
+        <jboss.logging.version>3.1.4.GA</jboss.logging.version>
+        <maven.compiler.version>3.1</maven.compiler.version>
+        <ejb.plugin.version>2.3</ejb.plugin.version>
+        <wildfly.plugin.version>1.0.2.Final</wildfly.plugin.version>
+    </properties>
+
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.wildfly.plugins</groupId>
+                    <artifactId>wildfly-maven-plugin</artifactId>
+                    <version>${wildfly.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.version}</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-ejb-plugin</artifactId>
+                    <version>${ejb.plugin.version}</version>
+                    <configuration>
+                        <ejbVersion>3.2</ejbVersion>
+                        <!-- Generate ejb-client for client project -->
+                        <generateClient>true</generateClient>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>
